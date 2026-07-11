@@ -9,7 +9,7 @@ from telegram.ext import (
 from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
+user_modes = {}
 keyboard = ReplyKeyboardMarkup(
     [
         ["🌐 Перевод", "💬 Ответ"],
@@ -133,19 +133,33 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = update.message.text or update.message.caption
 
-    if text == "🌐 Перевод":
-        await update.message.reply_text(
-            "Отправь текст, который нужно перевести.",
-            reply_markup=keyboard,
-        )
-        return
+    user_id = update.effective_user.id
 
-    if text == "💬 Ответ":
-        await update.message.reply_text(
-            "Отправь сообщение или скриншот переписки.",
-            reply_markup=keyboard,
-        )
-        return
+if text == "🌐 Перевод":
+    user_modes[user_id] = "translate"
+    await update.message.reply_text(
+        "🌐 Режим перевода включен.",
+        reply_markup=keyboard,
+    )
+    return
+
+if text == "💬 Ответ":
+    user_modes[user_id] = "reply"
+    await update.message.reply_text(
+        "💬 Режим ответов включен.",
+        reply_markup=keyboard,
+    )
+    return
+
+if text == "🤖 Чат":
+    user_modes[user_id] = "chat"
+    await update.message.reply_text(
+        "🤖 Режим чата включен.",
+        reply_markup=keyboard,
+    )
+    return
+
+mode = user_modes.get(user_id, "translate")
 
     if text == "🤖 Чат":
         await update.message.reply_text(
@@ -178,13 +192,20 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text("Пока я умею работать только с текстом.")
         return
 
-    response = client.responses.create(
-        model="gpt-5.5",
-        input=[
-            {"role": "system", "content": BOT_PROMPT},
-            {"role": "user", "content": f"{command}\n{text}"},
-        ],
-    )
+    if mode == "translate":
+    prompt = TRANSLATE_PROMPT
+elif mode == "reply":
+    prompt = REPLY_PROMPT
+else:
+    prompt = CHAT_PROMPT
+
+response = client.responses.create(
+    model="gpt-5.5",
+    input=[
+        {"role": "system", "content": prompt},
+        {"role": "user", "content": text},
+    ],
+)
 
     await update.message.reply_text(
     response.output_text,
