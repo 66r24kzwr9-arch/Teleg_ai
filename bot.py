@@ -17,6 +17,17 @@ keyboard = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
 )
+TRANSLATE_PROMPT = """
+...
+"""
+
+REPLY_PROMPT = """
+...
+"""
+
+CHAT_PROMPT = """
+...
+"""
 BOT_PROMPT = """
 Ты — личный помощник Анастасии.
 
@@ -158,10 +169,9 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
             reply_markup=keyboard,
         )
         return
+            mode = user_modes.get(user_id, "translate")
 
-    mode = user_modes.get(user_id, "translate")
-
-     if update.message.photo:
+    if update.message.photo:
         photo = update.message.photo[-1]
 
         file = await context.bot.get_file(photo.file_id)
@@ -175,23 +185,31 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if not text:
-        await update.message.reply_text("Пока я умею работать только с текстом.")
+        await update.message.reply_text(
+            "Пока я умею работать только с текстом.",
+            reply_markup=keyboard,
+        )
         return
 
     if mode == "translate":
-    prompt = TRANSLATE_PROMPT
-elif mode == "reply":
-    prompt = REPLY_PROMPT
-else:
-    prompt = CHAT_PROMPT
+        prompt = TRANSLATE_PROMPT
+    elif mode == "reply":
+        prompt = REPLY_PROMPT
+    else:
+        prompt = CHAT_PROMPT
 
-response = client.responses.create(
-    model="gpt-5.5",
-    input=[
-        {"role": "system", "content": prompt},
-        {"role": "user", "content": text},
-    ],
-)
+    response = client.responses.create(
+        model="gpt-5.5",
+        input=[
+            {"role": "system", "content": prompt},
+            {"role": "user", "content": text},
+        ],
+    )
+
+    await update.message.reply_text(
+        response.output_text,
+        reply_markup=keyboard,
+    )
 
     await update.message.reply_text(
     response.output_text,
