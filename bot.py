@@ -56,12 +56,24 @@ BOT_PROMPT = """
 
 Если есть перевод и варианты ответа, сначала выведи перевод, затем пустую строку, затем три варианта ответа.
 """
-
 async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message:
         return
 
     text = update.message.text or update.message.caption
+
+    if update.message.photo:
+        photo = update.message.photo[-1]
+
+        file = await context.bot.get_file(photo.file_id)
+
+        file_path = "image.jpg"
+
+        await file.download_to_drive(file_path)
+
+        await update.message.reply_text("✅ Фото скачано")
+
+        return
 
     if not text:
         await update.message.reply_text("Пока я умею работать только с текстом.")
