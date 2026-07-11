@@ -10,7 +10,13 @@ from openai import OpenAI
 
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-
+keyboard = ReplyKeyboardMarkup(
+    [
+        ["🌐 Перевод", "💬 Ответ"],
+        ["🤖 Чат"],
+    ],
+    resize_keyboard=True,
+)
 BOT_PROMPT = """
 Ты — личный помощник Анастасии.
 
