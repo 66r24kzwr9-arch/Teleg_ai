@@ -164,8 +164,10 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         ],
     )
 
-    await update.message.reply_text(response.output_text)
-
+    await update.message.reply_text(
+    response.output_text,
+    reply_markup=keyboard,
+)
     
 if __name__ == "__main__":
     app = (
