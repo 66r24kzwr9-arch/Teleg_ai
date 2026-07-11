@@ -161,14 +161,7 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     mode = user_modes.get(user_id, "translate")
 
-    command = ""
-
-    if update.message.text and update.message.text.startswith("/"):
-        parts = update.message.text.split(maxsplit=1)
-        command = parts[0]
-        text = parts[1] if len(parts) > 1 else ""
-
-    if update.message.photo:
+     if update.message.photo:
         photo = update.message.photo[-1]
 
         file = await context.bot.get_file(photo.file_id)
