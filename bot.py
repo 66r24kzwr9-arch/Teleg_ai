@@ -135,38 +135,31 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     user_id = update.effective_user.id
 
-if text == "🌐 Перевод":
-    user_modes[user_id] = "translate"
-    await update.message.reply_text(
-        "🌐 Режим перевода включен.",
-        reply_markup=keyboard,
-    )
-    return
-
-if text == "💬 Ответ":
-    user_modes[user_id] = "reply"
-    await update.message.reply_text(
-        "💬 Режим ответов включен.",
-        reply_markup=keyboard,
-    )
-    return
-
-if text == "🤖 Чат":
-    user_modes[user_id] = "chat"
-    await update.message.reply_text(
-        "🤖 Режим чата включен.",
-        reply_markup=keyboard,
-    )
-    return
-
-mode = user_modes.get(user_id, "translate")
-
-    if text == "🤖 Чат":
+    if text == "🌐 Перевод":
+        user_modes[user_id] = "translate"
         await update.message.reply_text(
-            "Задай любой вопрос.",
+            "🌐 Режим перевода включен.",
             reply_markup=keyboard,
         )
         return
+
+    if text == "💬 Ответ":
+        user_modes[user_id] = "reply"
+        await update.message.reply_text(
+            "💬 Режим ответов включен.",
+            reply_markup=keyboard,
+        )
+        return
+
+    if text == "🤖 Чат":
+        user_modes[user_id] = "chat"
+        await update.message.reply_text(
+            "🤖 Режим чата включен.",
+            reply_markup=keyboard,
+        )
+        return
+
+    mode = user_modes.get(user_id, "translate")
 
     command = ""
 
