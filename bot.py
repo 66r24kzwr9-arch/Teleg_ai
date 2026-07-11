@@ -131,6 +131,26 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     text = update.message.text or update.message.caption
+if text == "🌐 Перевод":
+    await update.message.reply_text(
+        "Отправь текст, который нужно перевести.",
+        reply_markup=keyboard,
+    )
+    return
+
+if text == "💬 Ответ":
+    await update.message.reply_text(
+        "Отправь сообщение или скриншот переписки.",
+        reply_markup=keyboard,
+    )
+    return
+
+if text == "🤖 Чат":
+    await update.message.reply_text(
+        "Задай любой вопрос.",
+        reply_markup=keyboard,
+    )
+    return
 
     command = ""
 
