@@ -126,13 +126,13 @@ async def handle(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     text = update.message.text or update.message.caption
 
-command = ""
+    command = ""
 
-if update.message.text and update.message.text.startswith("/"):
-    parts = update.message.text.split(maxsplit=1)
-    command = parts[0]
-    text = parts[1] if len(parts) > 1 else ""
-    
+    if update.message.text and update.message.text.startswith("/"):
+        parts = update.message.text.split(maxsplit=1)
+        command = parts[0]
+        text = parts[1] if len(parts) > 1 else ""
+
     if update.message.photo:
         photo = update.message.photo[-1]
 
@@ -160,6 +160,7 @@ if update.message.text and update.message.text.startswith("/"):
 
     await update.message.reply_text(response.output_text)
 
+    
 if __name__ == "__main__":
     app = (
         ApplicationBuilder()
