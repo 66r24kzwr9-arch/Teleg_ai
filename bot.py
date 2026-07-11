@@ -154,7 +154,7 @@ if update.message.text and update.message.text.startswith("/"):
         model="gpt-5.5",
         input=[
             {"role": "system", "content": BOT_PROMPT},
-            {"role": "user", "content": f"{command}\n{text}"},,
+            {"role": "user", "content": f"{command}\n{text}"},
         ],
     )
 
